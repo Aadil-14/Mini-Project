@@ -8,10 +8,16 @@ import Categories from './pages/Categories';
 import Settings from './pages/Settings';
 
 
+import Login from './pages/Login';
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Full screen routes */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Routes with Sidebar */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<Home />} />
           <Route path="stats" element={<Stats />} />

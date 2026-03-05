@@ -1,8 +1,9 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, PieChart, Wallet, Grid, Settings, LogOut, X } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
+    const navigate = useNavigate();
     const navItems = [
         { icon: LayoutDashboard, label: 'Home', path: '/' },
         { icon: PieChart, label: 'Stats', path: '/stats' },
@@ -61,7 +62,13 @@ const Sidebar = ({ isOpen, onClose }) => {
             </nav>
 
             <div className="mt-auto">
-                <button className="flex items-center gap-3 px-4 py-3.5 w-full border-none bg-transparent text-red-500 font-medium cursor-pointer rounded-xl transition-colors text-base hover:bg-red-50">
+                <button
+                    onClick={() => {
+                        onClose && onClose();
+                        navigate('/login');
+                    }}
+                    className="flex items-center gap-3 px-4 py-3.5 w-full border-none bg-transparent text-red-500 font-medium cursor-pointer rounded-xl transition-colors text-base hover:bg-red-50"
+                >
                     <LogOut size={20} />
                     <span>Logout</span>
                 </button>
