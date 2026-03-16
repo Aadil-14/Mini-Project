@@ -1,9 +1,11 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, PieChart, Wallet, Grid, Settings, LogOut, X } from 'lucide-react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { LayoutDashboard, PieChart, Wallet, Grid, Settings, LogOut, X, ChevronUp } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = React.useState(false);
     const navItems = [
         { icon: LayoutDashboard, label: 'Home', path: '/' },
         { icon: PieChart, label: 'Stats', path: '/stats' },
@@ -61,16 +63,55 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </ul>
             </nav>
 
-            <div className="mt-auto">
+            <div className="mt-auto pt-6 border-t border-gray-100 flex flex-col gap-2 relative">
+                {/* Profile Popup Menu */}
+                {isProfileMenuOpen && (
+                    <div className="absolute bottom-[calc(100%+8px)] left-0 w-full bg-white border border-gray-100 shadow-xl rounded-xl p-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                        <button
+                            onClick={() => {
+                                onClose && onClose();
+                                setIsProfileMenuOpen(false);
+                                navigate('/settings');
+                            }}
+                            className={`flex items-center gap-3 px-4 py-2.5 w-full border-none bg-transparent font-medium cursor-pointer rounded-lg transition-colors text-sm ${location.pathname === '/settings' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600'}`}
+                        >
+                            <Settings size={18} />
+                            <span>Profile Settings</span>
+                        </button>
+                        <hr className="my-1 border-gray-100" />
+                        <button
+                            onClick={() => {
+                                onClose && onClose();
+                                navigate('/login');
+                            }}
+                            className="flex items-center gap-3 px-4 py-2.5 w-full border-none bg-transparent text-rose-500 font-medium cursor-pointer rounded-lg transition-colors text-sm hover:bg-rose-50"
+                        >
+                            <LogOut size={18} />
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                )}
+
+                {/* Profile Card Trigger */}
                 <button
-                    onClick={() => {
-                        onClose && onClose();
-                        navigate('/login');
-                    }}
-                    className="flex items-center gap-3 px-4 py-3.5 w-full border-none bg-transparent text-red-500 font-medium cursor-pointer rounded-xl transition-colors text-base hover:bg-red-50"
+                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                    className={`flex items-center gap-3 p-2 w-full border border-transparent cursor-pointer rounded-xl transition-all text-left group ${isProfileMenuOpen ? 'bg-gray-50 border-gray-200 shadow-sm' : 'hover:bg-gray-50'}`}
                 >
-                    <LogOut size={20} />
-                    <span>Logout</span>
+                    <div className="w-10 h-10 rounded-full bg-indigo-100 border border-indigo-200 overflow-hidden flex-shrink-0">
+                        <img 
+                            src="https://i.pravatar.cc/150?img=11" 
+                            alt="User Profile" 
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="flex-1 overflow-hidden hidden md:block lg:block">
+                        <p className="text-sm font-bold text-gray-800 truncate">Aadil Shaikh</p>
+                        <p className="text-xs text-gray-500 truncate">aadil@pocketlog.com</p>
+                    </div>
+                    <ChevronUp 
+                        size={16} 
+                        className={`text-gray-400 transition-transform hidden md:block lg:block ${isProfileMenuOpen ? 'rotate-180' : ''}`} 
+                    />
                 </button>
             </div>
         </aside>

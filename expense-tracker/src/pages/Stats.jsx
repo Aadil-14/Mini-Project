@@ -3,7 +3,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { Download, Calendar } from 'lucide-react';
+import { Download, Calendar, TrendingUp } from 'lucide-react';
 
 
 const data = [
@@ -87,18 +87,37 @@ const Stats = () => {
 
             {/* Overview Cards */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 mb-8">
-                <div className="bg-white rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-sm text-gray-500 mb-2 font-medium">Total Spent</h3>
-                    <p className="text-3xl font-bold text-gray-800">₹7,400</p>
-                    <p className="text-xs text-gray-500 mt-1">12 Categories</p>
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -z-10 opacity-70"></div>
+                    <div>
+                        <h3 className="text-sm text-gray-500 mb-2 font-medium">Total Expense</h3>
+                        <p className="text-3xl font-bold text-gray-800">₹7,400</p>
+                    </div>
+                    <p className="text-xs text-rose-500 mt-4 font-medium flex items-center gap-1">
+                        <TrendingUp size={14} /> +12% from last month
+                    </p>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-sm text-gray-500 mb-2 font-medium">Daily Avg</h3>
-                    <p className="text-3xl font-bold text-gray-800">₹390</p>
+                
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-10 opacity-70"></div>
+                    <div>
+                        <h3 className="text-sm text-gray-500 mb-2 font-medium">Total Income</h3>
+                        <p className="text-3xl font-bold text-gray-800">₹45,500</p>
+                    </div>
+                    <p className="text-xs text-emerald-500 mt-4 font-medium flex items-center gap-1">
+                        <TrendingUp size={14} /> +5% from last month
+                    </p>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-sm text-gray-500 mb-2 font-medium">Health</h3>
-                    <p className="text-3xl font-bold text-gray-800">👍 Fair</p>
+                
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 opacity-70"></div>
+                    <div>
+                        <h3 className="text-sm text-gray-500 mb-2 font-medium">Avg Spending</h3>
+                        <p className="text-3xl font-bold text-gray-800">₹390 <span className="text-sm text-gray-400 font-normal">/ day</span></p>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-4 font-medium flex items-center gap-1">
+                        Based on last 30 days
+                    </p>
                 </div>
             </div>
 
@@ -155,30 +174,7 @@ const Stats = () => {
                 </div>
             </div>
 
-            {/* Calendar Heatmap (Simplified Visual) */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
-                <div className="flex justify-between mb-4">
-                    <h3 className="font-semibold text-gray-700">Activity Heatmap</h3>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#ebedf0' }}></span> Less
-                        <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#4f46e5' }}></span> More
-                    </div>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                    {/* Generating dummy boxes for a month view */}
-                    {Array.from({ length: 30 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="w-6 h-6 rounded"
-                            style={{
-                                opacity: Math.random() > 0.3 ? 1 : 0.3,
-                                backgroundColor: Math.random() > 0.6 ? '#4f46e5' : '#e2e8f0',
-                            }}
-                            title={`Day ${i + 1}`}
-                        />
-                    ))}
-                </div>
-            </div>
+           
         </div>
     );
 };
