@@ -13,21 +13,20 @@ const Settings = () => {
     const [userData, setUserData] = useState({ name: 'Alex Rivera', email: 'alex.rivera@example.com' });
     const [notifs, setNotifs] = useState({ email: true, push: false, messages: true });
     const [privacy, setPrivacy] = useState({ twoFactor: true, dataSharing: false });
-
+    const [showToast, setShowToast] = useState(false);
+    const [avatar, setAvatar] = useState(null);
     const sections = [
         { id: 'profile', icon: User, label: 'Profile Settings', desc: 'Update your name and personal details' },
         { id: 'notifications', icon: Bell, label: 'Notifications', desc: 'Manage your alerts and reminders' },
         { id: 'privacy', icon: Shield, label: 'Privacy & Security', desc: 'Manage your passwords and 2FA' },
         { id: 'help', icon: HelpCircle, label: 'Help & Support', desc: 'Get in touch with our team' },
     ];
-
     // --- Reusable Components ---
     const Switch = ({ enabled, onChange }) => (
         <button onClick={onChange} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${enabled ? 'bg-indigo-600' : 'bg-gray-200'}`}>
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${enabled ? 'translate-x-6' : 'translate-x-1'}`} />
         </button>
     );
-
     const SectionHeader = ({ title }) => (
         <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
             <button onClick={() => setActiveSection('menu')} className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors">
@@ -62,25 +61,154 @@ const Settings = () => {
                         </div>
                     )}
 
+                    {/* NOTIFICATIONS VIEW */}
+{activeSection === 'notifications' && (
+    <div className="animate-in fade-in slide-in-from-right-2 duration-200">
+        <SectionHeader title="Notifications" />
+        <div className="p-8 space-y-6">
+
+            <section className="space-y-4">
+                <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+                    <Bell size={18} className="text-indigo-600" />
+                    Notification Preferences
+                </h3>
+
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                        <Mail size={18} className="text-indigo-500" />
+                        <div>
+                            <p className="font-medium text-gray-800 text-sm">Email Notifications</p>
+                            <p className="text-xs text-gray-500">Receive updates via email</p>
+                        </div>
+                    </div>
+                    <Switch 
+                        enabled={notifs.email} 
+                        onChange={() => setNotifs({...notifs, email: !notifs.email})} 
+                    />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                        <Smartphone size={18} className="text-indigo-500" />
+                        <div>
+                            <p className="font-medium text-gray-800 text-sm">Push Notifications</p>
+                            <p className="text-xs text-gray-500">Get alerts on your device</p>
+                        </div>
+                    </div>
+                    <Switch 
+                        enabled={notifs.push} 
+                        onChange={() => setNotifs({...notifs, push: !notifs.push})} 
+                    />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                        <MessageSquare size={18} className="text-indigo-500" />
+                        <div>
+                            <p className="font-medium text-gray-800 text-sm">Message Notifications</p>
+                            <p className="text-xs text-gray-500">Notify when you receive messages</p>
+                        </div>
+                    </div>
+                    <Switch 
+                        enabled={notifs.messages} 
+                        onChange={() => setNotifs({...notifs, messages: !notifs.messages})} 
+                    />
+                </div>
+            </section>
+
+            <button 
+                onClick={() => {
+                    setShowToast(true);
+                    setTimeout(() => setShowToast(false), 2000);
+                }}
+                className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all"
+            >
+                Save Preferences
+            </button>
+
+        </div>
+    </div>
+)}  
+
                     {/* PROFILE VIEW */}
                     {activeSection === 'profile' && (
-                        <div className="animate-in fade-in slide-in-from-right-2 duration-200">
-                            <SectionHeader title="Profile" />
-                            <div className="p-8 space-y-6">
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                        <input className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" value={userData.name} onChange={(e) => setUserData({...userData, name: e.target.value})} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                        <input className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" value={userData.email} onChange={(e) => setUserData({...userData, email: e.target.value})} />
-                                    </div>
-                                </div>
-                                <button className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all">Save Changes</button>
+    <div className="animate-in fade-in slide-in-from-right-2 duration-200">
+        <SectionHeader title="Profile" />
+
+        <div className="p-8 space-y-6">
+
+            {/* AVATAR */}
+            <div className="flex flex-col items-center gap-4">
+                <div className="relative w-24 h-24">
+                    <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border">
+                        {avatar ? (
+                            <img 
+                                src={avatar} 
+                                alt="Avatar" 
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                No Image
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
+                    
+
+                    {/* Edit Icon Overlay */}
+                    <label className="absolute bottom-0 right-0 bg-indigo-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-indigo-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 11l6-6 3 3-6 6H9v-3z" />
+                        </svg>
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            className="hidden"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    setAvatar(URL.createObjectURL(file));
+                                }
+                            }}
+                        />
+                    </label>
+                </div>
+
+                <p className="text-sm text-gray-500">Click icon to change photo</p>
+            </div>
+
+            {/* FORM */}
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name
+                    </label>
+                    <input 
+                        className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" 
+                        value={userData.name} 
+                        onChange={(e) => setUserData({...userData, name: e.target.value})} 
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                    </label>
+                    <input 
+                        className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" 
+                        value={userData.email} 
+                        onChange={(e) => setUserData({...userData, email: e.target.value})} 
+                    />
+                </div>
+            </div>
+            {/* SAVE BUTTON */}
+            <button className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all">
+                Save Changes
+            </button>
+
+        </div>
+    </div>
+)}
 
                     {/* PRIVACY & SECURITY VIEW */}
                     {activeSection === 'privacy' && (
@@ -138,6 +266,12 @@ const Settings = () => {
                     )}
 
                 </div>
+                {/* TOAST */}
+                {showToast && (
+                    <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+                        Message sent successfully!
+                    </div>
+                )}
             </div>
         // </div>
     );
